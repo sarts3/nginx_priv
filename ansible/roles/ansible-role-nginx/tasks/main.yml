@@ -1,0 +1,30 @@
+---
+
+- apt_key: keyserver=pgp.mit.edu id=573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62
+
+- apt_repository:
+    repo: 'deb http://nginx.org/packages/mainline/ubuntu trusty nginx'
+    # filename: nginx (2.1)
+    state: present
+
+- name: install packages
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - ca-certificates
+    - nginx
+    - gettext-base
+
+- name: Nginx Front | Copy default.conf file
+  copy: src=/home/csarti/code/terraform_ansible_exercise/ansible/roles/ansible-role-nginx/files/default.conf dest=/etc/nginx/conf.d/default.conf owner=root group=root mode=0644
+  when: nginx_redirect == 1
+  notify:
+    - restart nginx
+
+- name: Uploading pic to show in index.html
+  copy: src=/home/csarti/code/terraform_ansible_exercise/ansible/roles/ansible-role-nginx/files/yeah.gif dest=/usr/share/nginx/html/yeah.gif owner=root group=root mode=0644
+  when: nginx_redirect == 0
+
+- name: Changing Index.html for customized version
+  copy: src=/home/csarti/code/terraform_ansible_exercise/ansible/roles/ansible-role-nginx/files/index.html dest=/usr/share/nginx/html/index.html owner=root group=root mode=0644
+  when: nginx_redirect == 0

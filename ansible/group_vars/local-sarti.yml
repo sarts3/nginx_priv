@@ -1,0 +1,2 @@
+---
+ansible_ssh_common_args: '-o ProxyCommand="ssh -o StrictHostKeyChecking=no -i ~/code/terraform_ansible_exercise/id_rsa -W %h:%p ec2-user@52.212.53.121"'

@@ -1,0 +1,6 @@
+[foo]
+foo-back  ansible_host=10.0.1.144 ansible_user=ubuntu ansible_ssh_private_key_file=/home/csarti/code/terraform_ansible_exercise/id_rsa
+foo-modsec  ansible_host=52.212.13.183 ansible_user=ubuntu ansible_ssh_private_key_file=/home/csarti/code/terraform_ansible_exercise/id_rsa
+
+[local-sarti:children]
+foo

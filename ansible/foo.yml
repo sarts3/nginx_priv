@@ -1,0 +1,5 @@
+- hosts: foo
+  sudo: yes
+  roles:
+    - docker
+    - ansible-role-nginx

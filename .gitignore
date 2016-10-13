@@ -1,0 +1,4 @@
+# Git ignore
+id_rsa
+id_rsa.pub
+terraform/key-pairs.tf

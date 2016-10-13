@@ -1,0 +1,39 @@
+---
+
+- name: Get uname
+  command: uname -r
+  register: os_uname
+
+- name: Check if docker is installed
+  shell: dpkg -l | grep docker-engine | grep "{{docker_version}}~" | wc -l
+  register: deb_docker_check
+
+- debug: var=deb_docker_check
+
+- name: Add specific key
+  apt_key: keyserver={{key_server_repo}}  id={{docker_repo_key}}
+  when: deb_docker_check.stdout == "0"
+
+- name: Add docker repo
+  apt_repository: repo='{{docker_repo}}' state=present
+  when: deb_docker_check.stdout == "0"
+
+- name: Install os packages
+  apt: pkg={{item}} state=present update_cache=yes
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - linux-image-extra-{{os_uname.stdout}}
+    - docker-engine={{docker_version}}
+  when: deb_docker_check.stdout == "0"
+
+- name: Docker default config file
+  template: src=docker-defaults.j2 dest=/etc/default/docker
+
+- name: Docker init file
+  template: src=docker-init.j2 dest=/etc/init/docker.conf
+  register: config
+
+- name: Restart Docker
+  service: name=docker state=restarted enabled=yes sleep=5
+  when: config|changed
