@@ -26,4 +26,7 @@ $> terraform apply
 
 $> cd ../ansible
 
+
+You'll need to update hosts and local-sarti.yml in order to adapt recipe to the given aws public ips
+
 $> ansible-playbook foo.yml
